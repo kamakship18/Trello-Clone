@@ -7,25 +7,22 @@
   align-items: center;
   justify-content: space-between;
   height: var(--header-height);
-  padding: 0 4px;
-  /* Translucent “glass” bar over the board */
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(14px) saturate(1.25);
-  -webkit-backdrop-filter: blur(14px) saturate(1.25);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  padding: 0 12px;
   position: relative;
   z-index: 100;
+  box-sizing: border-box;
 }
 
-/* Boards home — frosted light bar */
+/* Solid white bar — neutral on any board background; dark text/icons */
+.header--home,
+.header--board {
+  background: #ffffff;
+  border-bottom: 1px solid rgba(9, 30, 66, 0.12);
+  box-shadow: 0 1px 0 rgba(9, 30, 66, 0.06);
+}
+
 .header--home {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(12px) saturate(1.1);
-  -webkit-backdrop-filter: blur(12px) saturate(1.1);
-  border-bottom: 1px solid rgba(9, 30, 66, 0.08);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
-  padding: 0 8px 0 4px;
+  padding: 0 14px 0 10px;
 }
 
 .header-app-launcher {
@@ -46,9 +43,11 @@
   background: #091e420f;
 }
 
-.header--home .header-logo {
+.header--home .header-logo,
+.header--board .header-logo {
   color: #172b4d;
   opacity: 1;
+  font-weight: 600;
 }
 
 .header-logo-icon--blue {
@@ -160,6 +159,16 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+.header--home .header-btn,
+.header--board .header-btn {
+  color: #44546f;
+}
+
+.header--home .header-btn:hover,
+.header--board .header-btn:hover {
+  background: rgba(9, 30, 66, 0.08);
+}
+
 .header-btn-primary {
   background: rgba(255, 255, 255, 0.2);
 }
@@ -257,7 +266,7 @@
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: rgba(255, 255, 255, 0.92);
+  color: #44546f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -266,7 +275,7 @@
 }
 
 .header-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(9, 30, 66, 0.08);
 }
 
 .header-avatar {
@@ -289,11 +298,11 @@
 
 .header-avatar:hover {
   opacity: 0.92;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 2px rgba(9, 30, 66, 0.12);
 }
 
 .header-avatar:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid #0c66e4;
   outline-offset: 2px;
 }
 

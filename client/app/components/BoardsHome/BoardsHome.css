@@ -2,8 +2,9 @@
 
 .bh-layout {
   display: flex;
-  min-height: calc(100vh - var(--header-height));
-  background: #ffffff;
+  flex: 1;
+  min-height: 0;
+  background: rgba(255, 255, 255, 0.88);
   align-items: stretch;
 }
 

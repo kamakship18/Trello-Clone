@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <BoardProvider>
-      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="app-shell">
         <Header
           onGoHome={handleGoHome}
           onCreateBoard={() => setShowCreateModal(true)}

@@ -66,7 +66,10 @@ export default function Header({
   const isHome = !activeBoardId;
 
   return (
-    <header className={`header ${isHome ? 'header--home' : ''}`} id="main-header">
+    <header
+      className={`header ${isHome ? 'header--home' : 'header--board'}`}
+      id="main-header"
+    >
       <div className="header-left">
         {isHome && (
           <button type="button" className="header-app-launcher" aria-label="App launcher" title="App launcher">
@@ -84,7 +87,7 @@ export default function Header({
           </button>
         )}
         <div className="header-logo" onClick={onGoHome} style={{ cursor: 'pointer' }}>
-          <div className={`header-logo-icon ${isHome ? 'header-logo-icon--blue' : ''}`}>
+          <div className="header-logo-icon header-logo-icon--blue">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <rect x="1" y="1" width="10" height="22" rx="2" ry="2" />
               <rect x="13" y="1" width="10" height="14" rx="2" ry="2" />
@@ -128,7 +131,7 @@ export default function Header({
         )}
         {/* Board view: search cards */}
         {!isHome && activeBoardId && board && (
-          <div className="header-search" ref={searchRef}>
+          <div className="header-search header-search--home" ref={searchRef}>
             <input
               id="header-search-input"
               type="text"
@@ -168,7 +171,7 @@ export default function Header({
       <div className="header-right">
         <button
           type="button"
-          className={`header-create-btn ${isHome ? 'header-create-btn--solid' : ''}`}
+          className="header-create-btn header-create-btn--solid"
           id="header-create-btn"
           onClick={onCreateBoard}
         >
@@ -179,7 +182,7 @@ export default function Header({
           <span>Create</span>
         </button>
         {activeBoardId && (
-          <button type="button" className="header-icon-btn" aria-label="Notifications">
+          <button type="button" className="header-icon-btn header-icon-btn--dark" aria-label="Notifications">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />

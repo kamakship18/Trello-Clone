@@ -171,9 +171,9 @@
 .board-lists {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 12px;
   height: 100%;
-  padding: 8px 4px;
+  padding: 8px 8px;
 }
 
 /* Add Another List */
