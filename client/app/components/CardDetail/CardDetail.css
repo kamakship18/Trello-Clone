@@ -961,6 +961,83 @@
   background: #091e4224;
 }
 
+.cd-create-label-form {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #dcdfe4;
+}
+
+.cd-create-label-field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #44546f;
+  margin-bottom: 6px;
+}
+
+.cd-create-label-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 2px solid #dcdfe4;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #172b4d;
+  margin-bottom: 10px;
+  font-family: inherit;
+}
+
+.cd-create-label-input:focus {
+  outline: none;
+  border-color: #0c66e4;
+}
+
+.cd-create-label-input:disabled {
+  opacity: 0.7;
+}
+
+.cd-create-label-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.cd-create-label-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: transform 85ms ease, box-shadow 85ms ease;
+}
+
+.cd-create-label-swatch:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+
+.cd-create-label-swatch.is-selected {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0c66e4;
+}
+
+.cd-create-label-swatch:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cd-create-label-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cd-create-label-actions .cd-btn-primary {
+  min-width: 88px;
+}
+
 /* Members Popover */
 .cd-member-option {
   display: flex;

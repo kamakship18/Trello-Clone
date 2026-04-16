@@ -589,14 +589,6 @@
   cursor: not-allowed;
 }
 
-.boards-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-  color: var(--trello-text-light);
-}
-
 @keyframes overlayFadeIn {
   from {
     opacity: 0;

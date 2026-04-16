@@ -40,6 +40,7 @@ export default function CardDetail({ card: initialCard, onClose }) {
     mergeCardInBoard,
     board,
     currentMemberId,
+    createBoardLabel,
   } = useBoard();
   const [card, setCard] = useState(initialCard);
   const [title, setTitle] = useState(initialCard.title);
@@ -51,6 +52,10 @@ export default function CardDetail({ card: initialCard, onClose }) {
   const [addingItemTo, setAddingItemTo] = useState(null);
   const [newItemText, setNewItemText] = useState('');
   const [labelSearch, setLabelSearch] = useState('');
+  const [labelCreateOpen, setLabelCreateOpen] = useState(false);
+  const [newLabelName, setNewLabelName] = useState('');
+  const [newLabelColor, setNewLabelColor] = useState(COVER_COLORS[0]);
+  const [labelCreateSaving, setLabelCreateSaving] = useState(false);
   const [comments, setComments] = useState([]);
   const [activities, setActivities] = useState([]);
   const [attachments, setAttachments] = useState([]);
@@ -108,6 +113,14 @@ export default function CardDetail({ card: initialCard, onClose }) {
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose, activePopover]);
 
+  useEffect(() => {
+    if (activePopover !== 'labels') {
+      setLabelCreateOpen(false);
+      setNewLabelName('');
+      setNewLabelColor(COVER_COLORS[0]);
+    }
+  }, [activePopover]);
+
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
   };
@@ -147,6 +160,36 @@ export default function CardDetail({ card: initialCard, onClose }) {
       console.error('Failed to toggle label:', err);
     }
   }, [card, boardLabels, mergeCardInBoard]);
+
+  const handleCreateNewLabel = useCallback(async () => {
+    if (!board?.id || labelCreateSaving) return;
+    try {
+      setLabelCreateSaving(true);
+      const label = await createBoardLabel(board.id, {
+        name: newLabelName.trim(),
+        color: newLabelColor,
+      });
+      await addCardLabel(card.id, label.id);
+      const labels = [...(card.labels || []), label];
+      setCard((prev) => ({ ...prev, labels }));
+      mergeCardInBoard(card.id, { labels });
+      setLabelCreateOpen(false);
+      setNewLabelName('');
+    } catch (err) {
+      console.error('Failed to create label:', err);
+    } finally {
+      setLabelCreateSaving(false);
+    }
+  }, [
+    board?.id,
+    labelCreateSaving,
+    createBoardLabel,
+    newLabelName,
+    newLabelColor,
+    card.id,
+    card.labels,
+    mergeCardInBoard,
+  ]);
 
   // Member toggle
   const handleMemberToggle = useCallback(async (memberId) => {
@@ -903,7 +946,15 @@ export default function CardDetail({ card: initialCard, onClose }) {
             <div className="cd-popover">
               <div className="cd-popover-header">
                 <span className="cd-popover-title">Labels</span>
-                <button className="cd-popover-close" onClick={() => { setActivePopover(null); setLabelSearch(''); }}>
+                <button
+                  type="button"
+                  className="cd-popover-close"
+                  onClick={() => {
+                    setActivePopover(null);
+                    setLabelSearch('');
+                    setLabelCreateOpen(false);
+                  }}
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
@@ -944,7 +995,66 @@ export default function CardDetail({ card: initialCard, onClose }) {
                     </div>
                   );
                 })}
-                <button className="cd-create-label-btn">Create a new label</button>
+                {labelCreateOpen ? (
+                  <div className="cd-create-label-form">
+                    <label className="cd-create-label-field-label" htmlFor="cd-new-label-name">
+                      Name
+                    </label>
+                    <input
+                      id="cd-new-label-name"
+                      className="cd-create-label-input"
+                      value={newLabelName}
+                      onChange={(e) => setNewLabelName(e.target.value)}
+                      placeholder="Add a title (optional)"
+                      maxLength={100}
+                      disabled={labelCreateSaving}
+                    />
+                    <div className="cd-create-label-colors" role="group" aria-label="Label color">
+                      {COVER_COLORS.map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          className={`cd-create-label-swatch ${newLabelColor === c ? 'is-selected' : ''}`}
+                          style={{ background: c }}
+                          onClick={() => setNewLabelColor(c)}
+                          disabled={labelCreateSaving}
+                          title={c}
+                          aria-label={`Select color ${c}`}
+                          aria-pressed={newLabelColor === c}
+                        />
+                      ))}
+                    </div>
+                    <div className="cd-create-label-actions">
+                      <button
+                        type="button"
+                        className="cd-btn-primary"
+                        onClick={handleCreateNewLabel}
+                        disabled={labelCreateSaving}
+                      >
+                        {labelCreateSaving ? 'Creating…' : 'Create'}
+                      </button>
+                      <button
+                        type="button"
+                        className="cd-btn-cancel"
+                        onClick={() => {
+                          setLabelCreateOpen(false);
+                          setNewLabelName('');
+                        }}
+                        disabled={labelCreateSaving}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    className="cd-create-label-btn"
+                    onClick={() => setLabelCreateOpen(true)}
+                  >
+                    Create a new label
+                  </button>
+                )}
               </div>
             </div>
           </>

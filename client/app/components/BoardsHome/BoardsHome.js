@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { fetchBoards, createBoard, deleteBoard } from '../../api';
 import { getBoardThumbStyle } from '../../lib/boardThumbStyle';
+import PageLoader from '../PageLoader/PageLoader';
 import './BoardsHome.css';
 
 const BOARD_COLORS = [
@@ -133,7 +134,7 @@ export default function BoardsHome({
       <div className="bh-layout">
         <aside className="bh-sidebar bh-sidebar--skeleton" aria-hidden />
         <div className="bh-main bh-main--loading">
-          <div className="boards-loading">Loading boards…</div>
+          <PageLoader message="Loading your boards…" />
         </div>
       </div>
     );

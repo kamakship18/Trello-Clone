@@ -20,6 +20,7 @@ export const fetchBoard = (id) => api.get(`/boards/${id}`);
 export const createBoard = (data) => api.post('/boards', data);
 export const updateBoard = (id, data) => api.put(`/boards/${id}`, data);
 export const deleteBoard = (id) => api.delete(`/boards/${id}`);
+export const createBoardLabel = (boardId, data) => api.post(`/boards/${boardId}/labels`, data);
 export const uploadBoardBackground = (boardId, file) => {
   const fd = new FormData();
   fd.append('file', file);

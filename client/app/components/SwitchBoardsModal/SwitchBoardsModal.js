@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { fetchBoards } from '../../api';
 import { getBoardThumbStyle } from '../../lib/boardThumbStyle';
+import PageLoader from '../PageLoader/PageLoader';
 import './SwitchBoardsModal.css';
 
 const WORKSPACE_LABEL = 'Trello Workspace';
@@ -173,7 +174,7 @@ export default function SwitchBoardsModal({
 
         <div className={`sb-body ${viewMode === 'list' ? 'sb-body--list' : ''}`}>
           {loading ? (
-            <div className="sb-loading">Loading boards…</div>
+            <PageLoader compact message="Loading boards…" />
           ) : (
             <>
               <section className="sb-section" aria-label="Recent boards">

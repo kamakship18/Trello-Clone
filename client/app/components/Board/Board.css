@@ -295,22 +295,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: var(--font-size-md);
+  padding: 24px 16px;
+  box-sizing: border-box;
 }
 
-.board-loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  margin-bottom: 12px;
+.board-loading-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(9, 30, 66, 0.06);
+  overflow: hidden;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.board-loading-card .page-loader {
+  min-height: min(360px, 52vh);
+  padding: 28px 24px 32px;
 }
 
 .board-error {

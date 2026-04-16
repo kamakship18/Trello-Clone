@@ -11,6 +11,7 @@ import { CreateBoardModal } from '../BoardsHome/BoardsHome';
 import BoardMenuSidebar from '../BoardMenuSidebar/BoardMenuSidebar';
 import BoardBottomNav from '../BoardBottomNav/BoardBottomNav';
 import SwitchBoardsModal from '../SwitchBoardsModal/SwitchBoardsModal';
+import BoardLoadingView from './BoardLoadingView';
 import { getFileUrl } from '../../lib/fileUrl';
 import './Board.css';
 
@@ -223,14 +224,7 @@ export default function Board({
   }, [onCloseCreateModal, onSelectBoard]);
 
   if (loading) {
-    return (
-      <div className="board-loading">
-        <div style={{ textAlign: 'center' }}>
-          <div className="board-loading-spinner" />
-          <div>Loading board...</div>
-        </div>
-      </div>
-    );
+    return <BoardLoadingView />;
   }
 
   if (error) {

@@ -71,6 +71,31 @@ router.post('/:id/background', uploadBoardBg.single('file'), async (req, res) =>
   }
 });
 
+// POST /api/boards/:id/labels — Create a label on a board
+router.post('/:id/labels', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, color } = req.body;
+    if (!color || typeof color !== 'string' || !color.trim()) {
+      return res.status(400).json({ error: 'color is required' });
+    }
+    const boardCheck = await pool.query('SELECT id FROM boards WHERE id = $1', [id]);
+    if (boardCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'Board not found' });
+    }
+    const nm = name != null && String(name).trim() ? String(name).trim().slice(0, 100) : '';
+    const col = color.trim().slice(0, 30);
+    const result = await pool.query(
+      'INSERT INTO labels (board_id, name, color) VALUES ($1, $2, $3) RETURNING *',
+      [id, nm, col]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error creating label:', err);
+    res.status(500).json({ error: 'Failed to create label' });
+  }
+});
+
 // GET /api/boards/:id — Get board with all lists, cards, labels, members
 router.get('/:id', async (req, res) => {
   try {

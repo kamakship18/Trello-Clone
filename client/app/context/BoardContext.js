@@ -3,6 +3,7 @@
 import { createContext, useContext, useReducer, useCallback } from 'react';
 import {
   fetchBoard as apiFetchBoard,
+  createBoardLabel as apiCreateBoardLabel,
   createList as apiCreateList,
   updateList as apiUpdateList,
   deleteList as apiDeleteList,
@@ -151,6 +152,12 @@ function boardReducer(state, action) {
 
       return { ...state, lists: newLists };
     }
+
+    case 'ADD_LABEL':
+      return {
+        ...state,
+        labels: [...state.labels, action.payload].sort((a, b) => a.id - b.id),
+      };
 
     default:
       return state;
@@ -353,6 +360,17 @@ export function BoardProvider({ children }) {
     dispatch({ type: 'UPDATE_BOARD', payload: partial });
   }, []);
 
+  const createBoardLabelFn = useCallback(async (boardId, { name, color }) => {
+    try {
+      const res = await apiCreateBoardLabel(boardId, { name: name ?? '', color });
+      dispatch({ type: 'ADD_LABEL', payload: res.data });
+      return res.data;
+    } catch (err) {
+      console.error('Failed to create label:', err);
+      throw err;
+    }
+  }, []);
+
   /** Merge fields into a single card across lists — no network (for labels/members after API). */
   const mergeCardInBoard = useCallback((cardId, partial) => {
     dispatch({ type: 'UPDATE_CARD', payload: { id: cardId, ...partial } });
@@ -364,6 +382,7 @@ export function BoardProvider({ children }) {
     loadBoard,
     updateBoardState,
     mergeCardInBoard,
+    createBoardLabel: createBoardLabelFn,
     addList,
     editList,
     removeList,
