@@ -2,6 +2,8 @@
 
 A full-stack Kanban-style project management web application replicating Trello's design and user experience.
 
+**Implementation report** — For a full write-up of features (including screenshots), see: [Trello Clone — Implementation Report](https://docs.google.com/document/d/1Vnep8IxgUiAze0CZnxwXY9uXiwcB5Ih0Fi7zeL8zS0U/edit?usp=sharing).
+
 ## Tech Stack
 
 | Layer | Technology |
