@@ -1,0 +1,647 @@
+/* Trello boards dashboard — layout + tiles */
+
+.bh-layout {
+  display: flex;
+  min-height: calc(100vh - var(--header-height));
+  background: #ffffff;
+  align-items: stretch;
+}
+
+.bh-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: #f1f2f4;
+  border-right: 1px solid #dcdfe4;
+  padding: 12px 8px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bh-sidebar--skeleton {
+  min-height: 400px;
+}
+
+.bh-side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bh-side-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #44546f;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.bh-side-link:hover {
+  background: #dcdfe4;
+}
+
+.bh-side-link.is-active {
+  background: #e9f2ff;
+  color: #0c66e4;
+}
+
+.bh-workspace-block {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #dcdfe4;
+}
+
+.bh-workspace-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px 8px;
+}
+
+.bh-workspace-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #626f86;
+  letter-spacing: 0.04em;
+}
+
+.bh-workspace-add {
+  border: none;
+  background: transparent;
+  color: #44546f;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.bh-workspace-add:hover {
+  background: #dcdfe4;
+}
+
+.bh-workspace-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  color: #172b4d;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  font-family: var(--font-family);
+}
+
+.bh-workspace-toggle:hover {
+  background: #dcdfe4;
+}
+
+.bh-workspace-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: #5aac44;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bh-workspace-name {
+  flex: 1;
+}
+
+.bh-chevron {
+  transition: transform 0.15s ease;
+  flex-shrink: 0;
+  color: #44546f;
+}
+
+.bh-chevron.open {
+  transform: rotate(180deg);
+}
+
+.bh-workspace-sub {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0 0 0 8px;
+}
+
+.bh-workspace-sub li {
+  margin: 0;
+}
+
+.bh-sub-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 8px 6px 28px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #44546f;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.bh-sub-link:hover {
+  background: #dcdfe4;
+}
+
+.bh-sub-link.is-active {
+  font-weight: 600;
+  color: #0c66e4;
+}
+
+.bh-sub-plus {
+  font-size: 14px;
+  color: #626f86;
+}
+
+.bh-main {
+  flex: 1;
+  min-width: 0;
+  padding: 24px 40px 48px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.bh-main--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bh-section {
+  margin-bottom: 40px;
+}
+
+.bh-page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #172b4d;
+  margin: 0 0 8px;
+}
+
+.bh-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #172b4d;
+  margin: 0 0 16px;
+}
+
+.bh-section-title svg {
+  color: #44546f;
+}
+
+.bh-muted {
+  color: #626f86;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  max-width: 560px;
+}
+
+.bh-primary-btn {
+  padding: 8px 16px;
+  background: #0c66e4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.bh-primary-btn:hover {
+  background: #0055cc;
+}
+
+.bh-board-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+/* Board tile — image top, white title bar (Trello) */
+.bh-board-tile {
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.12);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  background: #fff;
+}
+
+.bh-board-tile:hover {
+  box-shadow: 0 4px 12px rgba(9, 30, 66, 0.18);
+  transform: translateY(-1px);
+}
+
+.bh-board-tile:focus-visible {
+  outline: 2px solid #0c66e4;
+  outline-offset: 2px;
+}
+
+.bh-board-tile-thumb {
+  height: 120px;
+  position: relative;
+}
+
+.bh-board-tile-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  cursor: pointer;
+}
+
+.bh-board-tile:hover .bh-board-tile-delete {
+  opacity: 1;
+}
+
+.bh-board-tile-delete:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.bh-board-tile-footer {
+  background: #ffffff;
+  padding: 10px 12px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #dcdfe4;
+}
+
+.bh-board-tile-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #172b4d;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.bh-board-create {
+  height: 168px;
+  border-radius: 8px;
+  border: none;
+  background: #091e420f;
+  color: #172b4d;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: background 0.15s ease;
+}
+
+.bh-board-create:hover {
+  background: #091e4224;
+}
+
+.bh-workspace-section {
+  padding-top: 8px;
+}
+
+.bh-workspace-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.bh-workspace-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #626f86;
+  margin: 0;
+}
+
+.bh-ws-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: #5aac44;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bh-workspace-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bh-ws-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #f1f2f4;
+  color: #44546f;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.bh-ws-action:hover {
+  background: #dcdfe4;
+}
+
+.bh-closed-link {
+  margin-top: 20px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #f1f2f4;
+  color: #172b4d;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.bh-closed-link:hover {
+  background: #dcdfe4;
+}
+
+.bh-template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.bh-template-card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.12);
+  font-family: var(--font-family);
+}
+
+.bh-template-card:hover {
+  box-shadow: 0 4px 12px rgba(9, 30, 66, 0.2);
+}
+
+.bh-template-thumb {
+  height: 100px;
+}
+
+.bh-template-card span {
+  display: block;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #172b4d;
+}
+
+.bh-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.bh-modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(9, 30, 66, 0.2);
+}
+
+.bh-modal h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #172b4d;
+}
+
+/* Create Board Modal */
+.create-board-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 100px;
+  z-index: 2100;
+  animation: overlayFadeIn 0.12s ease;
+}
+
+.create-board-modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  width: 320px;
+  padding: 16px;
+  box-shadow: var(--shadow-xl);
+  animation: modalSlideIn 0.15s ease;
+}
+
+.create-board-preview {
+  height: 120px;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.create-board-preview-title {
+  position: relative;
+  color: white;
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  padding: 0 16px;
+  text-align: center;
+  word-break: break-word;
+}
+
+.create-board-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--trello-text);
+  margin-bottom: 4px;
+}
+
+.create-board-input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid var(--surface-active);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.create-board-input:focus {
+  border-color: var(--trello-blue);
+}
+
+.create-board-colors {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.create-board-color-btn {
+  width: 40px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  border: 2px solid transparent;
+}
+
+.create-board-color-btn:hover {
+  transform: scale(1.08);
+}
+
+.create-board-color-btn.active {
+  border-color: var(--trello-blue);
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--trello-blue);
+}
+
+.create-board-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.create-board-submit {
+  padding: 8px 16px;
+  background: var(--trello-blue);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  transition: background var(--transition-fast);
+  flex: 1;
+  border: none;
+  cursor: pointer;
+}
+
+.create-board-submit:hover {
+  background: var(--trello-blue-hover);
+}
+
+.create-board-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.boards-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--trello-text-light);
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .bh-layout {
+    flex-direction: column;
+  }
+
+  .bh-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #dcdfe4;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .bh-side-nav {
+    flex-direction: row;
+    flex: 1;
+  }
+
+  .bh-workspace-block {
+    width: 100%;
+    margin-top: 0;
+    border-top: none;
+  }
+
+  .bh-main {
+    padding: 16px;
+  }
+}

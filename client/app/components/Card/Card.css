@@ -1,0 +1,181 @@
+/* ============================================
+   Card — Trello exact replica
+   ============================================ */
+
+.card {
+  background: var(--list-card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--list-card-shadow);
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-base);
+  overflow: hidden;
+  position: relative;
+}
+
+.card:hover {
+  background: #f4f5f7;
+  box-shadow: 0 2px 4px rgba(9, 30, 66, 0.2);
+}
+
+.card.is-dragging {
+  box-shadow: var(--list-card-shadow-drag);
+  transform: rotate(3deg);
+  background: var(--list-card-bg);
+}
+
+.card-cover-preview {
+  height: 40px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-content {
+  padding: 6px 8px;
+}
+
+/* Card Labels — Trello small strips */
+.card-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.card-label-chip {
+  height: 8px;
+  min-width: 40px;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.card:hover .card-label-chip {
+  height: 16px;
+  min-width: 48px;
+}
+
+.card-label-chip.expanded {
+  height: 16px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: white;
+}
+
+/* Card Title */
+.card-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--trello-text);
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+/* Card Badges — compact row */
+.card-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.card-badge {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--font-size-xs);
+  color: var(--trello-text-light);
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+}
+
+.card-badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.card-badge.overdue {
+  background: #eb5a46;
+  color: white;
+  padding: 1px 6px;
+}
+
+.card-badge.due-soon {
+  background: #f2d600;
+  color: var(--trello-text);
+  padding: 1px 6px;
+}
+
+.card-badge.complete {
+  background: #61bd4f;
+  color: white;
+  padding: 1px 6px;
+}
+
+/* Card Members — small avatars */
+.card-members {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.card-member-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #c377e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: white;
+  border: 1px solid var(--list-card-bg);
+  margin-left: -4px;
+}
+
+.card-member-avatar:first-child {
+  margin-left: 0;
+}
+
+/* Card Bottom Row */
+.card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Card Edit Button (on hover) */
+.card-edit-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: var(--list-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  color: var(--trello-text-light);
+  z-index: 2;
+}
+
+.card:hover .card-edit-btn {
+  opacity: 1;
+}
+
+.card-edit-btn:hover {
+  background: var(--surface-active);
+  color: var(--trello-text);
+}
+
+.card-inner {
+  position: relative;
+}
