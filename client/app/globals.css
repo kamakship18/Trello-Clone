@@ -211,10 +211,10 @@ a {
     gap: 10px;
   }
 
-  /* Card Detail — stack sidebar below main */
+  /* Card Detail — stack sidebar below main (layout matches CardDetail.css) */
   .card-detail-modal {
-    width: 95vw;
-    max-height: calc(100vh - 48px);
+    width: min(100%, calc(100vw - 32px));
+    max-height: min(90vh, calc(100dvh - 48px));
   }
 
   .card-detail-body {
@@ -352,15 +352,25 @@ a {
 
   /* Card detail — full width */
   .card-detail-overlay {
-    padding-top: 8px;
+    padding: 16px max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-bottom))
+      max(20px, env(safe-area-inset-right));
+    padding-top: max(16px, env(safe-area-inset-top));
+    align-items: center;
+    justify-content: center;
   }
 
   .card-detail-modal {
-    width: 100vw;
-    max-width: 100vw;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    max-height: calc(100vh - 16px);
-    margin-bottom: 0;
+    width: min(100%, calc(100vw - 40px));
+    max-width: min(100%, calc(100vw - 40px));
+    border-radius: 14px;
+    max-height: min(86vh, calc(100dvh - 32px));
+    margin: 0 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow:
+      0 20px 56px rgba(0, 0, 0, 0.32),
+      0 0 0 1px rgba(9, 30, 66, 0.14);
+    border: 1px solid rgba(9, 30, 66, 0.12);
   }
 
   .card-detail-header {
