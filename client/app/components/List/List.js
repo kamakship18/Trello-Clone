@@ -5,16 +5,27 @@ import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { useBoard } from '../../context/BoardContext';
 import Card from '../Card/Card';
 import AddForm from '../AddForm/AddForm';
+import ListActionsMenu from './ListActionsMenu';
 import './List.css';
 
-export default function List({ list, index, onCardClick }) {
-  const { editList, removeList, addCard } = useBoard();
+/** Soft column wash: mix accent with default list gray (#ebecf0) — matches Trello-style full-list tint */
+function listColumnBackground(hex) {
+  const base = [235, 236, 240];
+  const mix = 0.36;
+  const h = String(hex).replace(/^#/, '');
+  if (h.length !== 6 || !/^[0-9a-fA-F]+$/.test(h)) return '#ebecf0';
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgb(${Math.round(r * mix + base[0] * (1 - mix))},${Math.round(g * mix + base[1] * (1 - mix))},${Math.round(b * mix + base[2] * (1 - mix))})`;
+}
+
+export default function List({ list, index, onCardClick, boardId }) {
+  const { editList, addCard, board, lists } = useBoard();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(list.title);
   const [showAddCard, setShowAddCard] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
   const titleInputRef = useRef(null);
-  const menuRef = useRef(null);
 
   useEffect(() => {
     if (isEditing && titleInputRef.current) {
@@ -23,16 +34,9 @@ export default function List({ list, index, onCardClick }) {
     }
   }, [isEditing]);
 
-  // Close menu on outside click
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    setTitle(list.title);
+  }, [list.title]);
 
   const handleTitleSubmit = useCallback(() => {
     const trimmed = title.trim();
@@ -52,19 +56,36 @@ export default function List({ list, index, onCardClick }) {
     }
   };
 
-  const handleAddCard = useCallback(async (cardTitle) => {
-    await addCard(list.id, cardTitle);
-    setShowAddCard(false);
-  }, [addCard, list.id]);
+  const handleAddCard = useCallback(
+    async (cardTitle) => {
+      await addCard(list.id, cardTitle);
+      setShowAddCard(false);
+    },
+    [addCard, list.id]
+  );
 
-  const handleDeleteList = useCallback(() => {
-    if (window.confirm(`Delete "${list.title}" and all its cards?`)) {
-      removeList(list.id);
-    }
-    setShowMenu(false);
-  }, [removeList, list.id, list.title]);
+  const [watched, setWatched] = useState(false);
+
+  useEffect(() => {
+    setWatched(
+      typeof window !== 'undefined' &&
+        window.localStorage.getItem(`trello_list_watch_${list.id}`) === '1'
+    );
+  }, [list.id]);
+
+  useEffect(() => {
+    const onWatch = (e) => {
+      if (e.detail?.listId === list.id) {
+        setWatched(window.localStorage.getItem(`trello_list_watch_${list.id}`) === '1');
+      }
+    };
+    window.addEventListener('trelloListWatchChanged', onWatch);
+    return () => window.removeEventListener('trelloListWatchChanged', onWatch);
+  }, [list.id]);
 
   const cards = list.cards || [];
+  const bid = boardId ?? board?.id;
+  const listAccent = list.header_color || null;
 
   return (
     <Draggable draggableId={`list-${list.id}`} index={index}>
@@ -74,72 +95,43 @@ export default function List({ list, index, onCardClick }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          <div className={`list ${snapshot.isDragging ? 'is-dragging' : ''}`}>
-            {/* List Header */}
-            <div className="list-header" {...provided.dragHandleProps}>
-              {isEditing ? (
-                <input
-                  ref={titleInputRef}
-                  className="list-title-input"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  onBlur={handleTitleSubmit}
-                  onKeyDown={handleTitleKeyDown}
-                />
-              ) : (
-                <div
-                  className="list-title"
-                  onClick={() => setIsEditing(true)}
-                >
-                  {list.title}
-                </div>
-              )}
-              <span className="list-card-count">{cards.length}</span>
-              <div className="list-header-actions" style={{ position: 'relative' }}>
-                <button
-                  className="list-menu-btn"
-                  onClick={() => setShowMenu(!showMenu)}
-                  id={`list-menu-btn-${list.id}`}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="5" r="2" />
-                    <circle cx="12" cy="12" r="2" />
-                    <circle cx="12" cy="19" r="2" />
-                  </svg>
-                </button>
-
-                {showMenu && (
-                  <div className="list-menu" ref={menuRef}>
-                    <button
-                      className="list-menu-item"
-                      onClick={() => {
-                        setShowAddCard(true);
-                        setShowMenu(false);
-                      }}
-                    >
-                      Add card
-                    </button>
-                    <button
-                      className="list-menu-item"
-                      onClick={() => {
-                        setIsEditing(true);
-                        setShowMenu(false);
-                      }}
-                    >
-                      Edit title
-                    </button>
-                    <button
-                      className="list-menu-item danger"
-                      onClick={handleDeleteList}
-                    >
-                      Delete list
-                    </button>
+          <div
+            className={`list ${snapshot.isDragging ? 'is-dragging' : ''} ${listAccent ? 'list--colored' : ''}`}
+            style={listAccent ? { background: listColumnBackground(listAccent) } : undefined}
+          >
+            <div className="list-header">
+              <div className="list-header-main" {...provided.dragHandleProps}>
+                {isEditing ? (
+                  <input
+                    ref={titleInputRef}
+                    className="list-title-input"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onBlur={handleTitleSubmit}
+                    onKeyDown={handleTitleKeyDown}
+                  />
+                ) : (
+                  <div className="list-title" onClick={() => setIsEditing(true)}>
+                    {list.title}
+                    {watched ? (
+                      <span className="list-watch-eye" title="Watching">
+                        {' '}
+                        👁
+                      </span>
+                    ) : null}
                   </div>
                 )}
               </div>
+              {bid && (
+                <ListActionsMenu
+                  list={list}
+                  boardId={bid}
+                  lists={lists}
+                  onAddCard={() => setShowAddCard(true)}
+                />
+              )}
             </div>
 
-            {/* Cards */}
             <Droppable droppableId={String(list.id)} type="card">
               {(dropProvided, dropSnapshot) => (
                 <div
@@ -147,7 +139,11 @@ export default function List({ list, index, onCardClick }) {
                   ref={dropProvided.innerRef}
                   {...dropProvided.droppableProps}
                   style={{
-                    background: dropSnapshot.isDraggingOver ? 'rgba(0,0,0,0.04)' : 'transparent',
+                    background: dropSnapshot.isDraggingOver
+                      ? listAccent
+                        ? 'rgba(0,0,0,0.07)'
+                        : 'rgba(0,0,0,0.04)'
+                      : 'transparent',
                     borderRadius: '8px',
                     transition: 'background 0.2s ease',
                   }}
@@ -165,7 +161,6 @@ export default function List({ list, index, onCardClick }) {
               )}
             </Droppable>
 
-            {/* Add Card Footer */}
             <div className="list-footer">
               {showAddCard ? (
                 <AddForm
@@ -183,7 +178,9 @@ export default function List({ list, index, onCardClick }) {
                   id={`add-card-btn-${list.id}`}
                   onClick={() => setShowAddCard(true)}
                 >
-                  <span className="add-card-plus" aria-hidden>+</span>
+                  <span className="add-card-plus" aria-hidden>
+                    +
+                  </span>
                   Add a card
                 </button>
               )}

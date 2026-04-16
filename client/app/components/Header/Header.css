@@ -8,19 +8,23 @@
   justify-content: space-between;
   height: var(--header-height);
   padding: 0 4px;
-  background: rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  /* Translucent “glass” bar over the board */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px) saturate(1.25);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   position: relative;
   z-index: 100;
 }
 
-/* Trello boards dashboard — light header */
+/* Boards home — frosted light bar */
 .header--home {
-  background: #ffffff;
-  border-bottom: 1px solid #dcdfe4;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  border-bottom: 1px solid rgba(9, 30, 66, 0.08);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
   padding: 0 8px 0 4px;
 }
 
@@ -245,24 +249,6 @@
 
 .header-create-btn:hover {
   background: rgba(255, 255, 255, 0.32);
-}
-
-.header-trial-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #6c3baa 0%, #8b5cf6 100%);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.header-trial-badge svg {
-  flex-shrink: 0;
-  opacity: 0.95;
 }
 
 .header-icon-btn {

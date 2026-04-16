@@ -29,6 +29,8 @@ CREATE TABLE lists (
   title VARCHAR(255) NOT NULL,
   position REAL NOT NULL,
   is_archived BOOLEAN DEFAULT FALSE,
+  header_color VARCHAR(32),
+  automation JSONB DEFAULT '{}',
   created_at TIMESTAMP DEFAULT NOW()
 );
 

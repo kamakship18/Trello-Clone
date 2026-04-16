@@ -14,6 +14,11 @@ import {
 } from '../api';
 import { computeCardMoveUpdates } from '../utils/cardMove';
 
+function normalizeAutomation(raw) {
+  if (!raw || typeof raw !== 'object') return {};
+  return raw;
+}
+
 const BoardContext = createContext(null);
 
 const initialState = {
@@ -205,19 +210,73 @@ export function BoardProvider({ children }) {
     }
   }, []);
 
-  const addCard = useCallback(async (listId, title) => {
-    try {
-      const res = await apiCreateCard({
-        list_id: listId,
-        title,
-        member_id: members?.[0]?.id,
-      });
-      dispatch({ type: 'ADD_CARD', payload: res.data });
-      return res.data;
-    } catch (err) {
-      console.error('Failed to add card:', err);
-    }
-  }, [members]);
+  const addCard = useCallback(
+    async (listId, title) => {
+      try {
+        const res = await apiCreateCard({
+          list_id: listId,
+          title,
+          member_id: members?.[0]?.id,
+        });
+        const newCard = res.data;
+        dispatch({ type: 'ADD_CARD', payload: newCard });
+
+        const list = lists.find((l) => l.id === listId);
+        const auto = normalizeAutomation(list?.automation);
+        const targetId = Number(auto.onCardAdded?.targetListId);
+        if (targetId && !Number.isNaN(targetId) && targetId !== listId) {
+          const listsWithNewCard = lists.map((l) => {
+            if (l.id !== listId) return l;
+            return { ...l, cards: [...(l.cards || []), newCard] };
+          });
+          const sourceListW = listsWithNewCard.find((l) => l.id === listId);
+          const destListW = listsWithNewCard.find((l) => l.id === targetId);
+          if (sourceListW && destListW) {
+            const sourceIndex = sourceListW.cards.length - 1;
+            const destIndex = destListW.cards.length;
+            const updates = computeCardMoveUpdates(
+              listsWithNewCard,
+              listId,
+              targetId,
+              sourceIndex,
+              destIndex
+            );
+            const sourceList = lists.find((l) => l.id === listId);
+            const destList = lists.find((l) => l.id === targetId);
+            const activity = {
+              member_id: members?.[0]?.id,
+              card_id: newCard.id,
+              from_list_id: listId,
+              to_list_id: targetId,
+              from_list_title: sourceList?.title,
+              to_list_title: destList?.title,
+            };
+            dispatch({
+              type: 'MOVE_CARD',
+              payload: {
+                cardId: newCard.id,
+                sourceListId: listId,
+                destListId: targetId,
+                sourceIndex,
+                destIndex,
+              },
+            });
+            try {
+              await apiReorderCards(updates, activity);
+            } catch (err) {
+              console.error('Automation move failed:', err);
+              if (board?.id) loadBoard(board.id, { silent: true });
+            }
+          }
+        }
+
+        return newCard;
+      } catch (err) {
+        console.error('Failed to add card:', err);
+      }
+    },
+    [members, lists, board?.id, loadBoard]
+  );
 
   const editCard = useCallback(async (cardId, data) => {
     try {

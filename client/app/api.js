@@ -31,6 +31,11 @@ export const createList = (data) => api.post('/lists', data);
 export const updateList = (id, data) => api.put(`/lists/${id}`, data);
 export const deleteList = (id) => api.delete(`/lists/${id}`);
 export const reorderLists = (lists) => api.patch('/lists/reorder', { lists });
+export const copyList = (id, data) => api.post(`/lists/${id}/copy`, data || {});
+export const moveListToBoard = (id, data) => api.post(`/lists/${id}/move`, data);
+export const moveAllCardsInList = (id, data) => api.post(`/lists/${id}/move-all-cards`, data);
+export const sortListCards = (id, data) => api.patch(`/lists/${id}/sort-cards`, data);
+export const archiveAllCardsInList = (id) => api.patch(`/lists/${id}/archive-all-cards`);
 
 // === Card APIs ===
 export const createCard = (data) => api.post('/cards', data);

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { useBoard } from '../../context/BoardContext';
-import { updateBoard, createBoard as apiCreateBoard } from '../../api';
+import { updateBoard, createBoard as apiCreateBoard, sortListCards as apiSortListCards } from '../../api';
 import List from '../List/List';
 import AddForm from '../AddForm/AddForm';
 import CardDetail from '../CardDetail/CardDetail';
@@ -52,6 +52,53 @@ export default function Board({
   useEffect(() => {
     loadBoard(boardId);
   }, [boardId, loadBoard]);
+
+  // List automation: daily / Monday sort when board data loads (localStorage prevents repeat runs)
+  useEffect(() => {
+    if (!board?.id || !lists.length) return;
+    let cancelled = false;
+    (async () => {
+      let didSort = false;
+      for (const list of lists) {
+        const raw = list.automation;
+        const a = raw && typeof raw === 'object' ? raw : {};
+        if (a.dailySort?.sortBy && typeof window !== 'undefined') {
+          const key = `trello_daily_sort_${list.id}`;
+          const today = new Date().toDateString();
+          if (window.localStorage.getItem(key) !== today) {
+            try {
+              await apiSortListCards(list.id, { sort_by: a.dailySort.sortBy });
+              window.localStorage.setItem(key, today);
+              didSort = true;
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }
+        if (a.weeklyMondaySort?.sortBy && typeof window !== 'undefined') {
+          const d = new Date();
+          if (d.getDay() === 1) {
+            const key = `trello_mon_sort_${list.id}_${d.toISOString().slice(0, 10)}`;
+            if (!window.localStorage.getItem(key)) {
+              try {
+                await apiSortListCards(list.id, { sort_by: a.weeklyMondaySort.sortBy });
+                window.localStorage.setItem(key, '1');
+                didSort = true;
+              } catch (e) {
+                console.error(e);
+              }
+            }
+          }
+        }
+      }
+      if (!cancelled && didSort) {
+        loadBoard(board.id, { silent: true });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [board?.id, lists, loadBoard]);
 
   // Set board title when board loads
   useEffect(() => {
@@ -391,6 +438,7 @@ export default function Board({
                     key={list.id}
                     list={list}
                     index={index}
+                    boardId={boardId}
                     onCardClick={handleCardClick}
                   />
                 ))}
