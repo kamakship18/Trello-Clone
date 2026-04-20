@@ -350,7 +350,7 @@ a {
     padding: 0 6px;
   }
 
-  /* Card detail — full width */
+  /* Card detail — phones: match CardDetail.css wide gutters */
   .card-detail-overlay {
     padding: 16px max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-bottom))
       max(20px, env(safe-area-inset-right));

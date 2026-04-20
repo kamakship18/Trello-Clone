@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { fetchBoards, createBoard, deleteBoard } from '../../api';
+import { fetchBoards, createBoard, createBoardFromTemplate, deleteBoard } from '../../api';
 import { getBoardThumbStyle } from '../../lib/boardThumbStyle';
 import PageLoader from '../PageLoader/PageLoader';
 import './BoardsHome.css';
@@ -123,10 +123,22 @@ export default function BoardsHome({
   }, []);
 
   const createFromTemplate = useCallback(
-    async (title, bg) => {
-      await handleCreateBoard(title, bg);
+    async (templateId, title, bg) => {
+      try {
+        const res = await createBoardFromTemplate({
+          templateId,
+          title,
+          background: bg,
+        });
+        setBoards((prev) => [res.data, ...prev]);
+        setShowCreate(false);
+        onCloseCreateModal?.();
+        onSelectBoard(res.data.id);
+      } catch (err) {
+        console.error('Failed to create board from template:', err);
+      }
     },
-    [handleCreateBoard]
+    [onSelectBoard, onCloseCreateModal]
   );
 
   if (loading) {
@@ -249,15 +261,27 @@ export default function BoardsHome({
             <p className="bh-muted">Start faster with a template — pick one to create a new board.</p>
             <div className="bh-template-grid">
               {[
-                { title: 'Project Management', bg: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-                { title: 'Marketing', bg: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-                { title: 'Design Sprint', bg: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+                {
+                  id: 'project-management',
+                  title: 'Project Management',
+                  bg: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                },
+                {
+                  id: 'marketing',
+                  title: 'Marketing',
+                  bg: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                },
+                {
+                  id: 'design-sprint',
+                  title: 'Design Sprint',
+                  bg: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                },
               ].map((t) => (
                 <button
-                  key={t.title}
+                  key={t.id}
                   type="button"
                   className="bh-template-card"
-                  onClick={() => createFromTemplate(`${t.title} board`, t.bg)}
+                  onClick={() => createFromTemplate(t.id, `${t.title} board`, t.bg)}
                 >
                   <div className="bh-template-thumb" style={{ background: t.bg }} />
                   <span>{t.title}</span>

@@ -1,6 +1,3 @@
-/**
- * Trello-style relative timestamps for comments and activity.
- */
 export function formatRelativeTime(isoString) {
   if (!isoString) return '';
   const d = new Date(isoString);

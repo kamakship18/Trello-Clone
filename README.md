@@ -60,18 +60,22 @@ Visit `http://localhost:3000` in your browser.
 
 ## Database Schema
 
-The schema consists of 9 tables:
-- `boards` — Board data
-- `lists` — Board columns with position ordering
-- `cards` — Cards with position, description, due dates
-- `labels` — Color-coded labels per board
-- `card_labels` — Many-to-many junction
-- `members` — Pre-seeded users (no auth)
-- `card_members` — Many-to-many junction
-- `checklists` — Checklists attached to cards
-- `checklist_items` — Individual checklist items
+The data model follows a **board → list → card** hierarchy. Boards own lists and board-level labels; cards live in lists and can have checklists, comments, attachments, activities, assigned members, and applied labels (many-to-many via junction tables).
 
-Position fields use `REAL` (float) for efficient reordering without renumbering.
+![Entity-relationship diagram — boards, lists, cards, and related tables](image.png)
+
+**Source of truth:** Exact column types, keys, and indexes are defined in [`server/schema.sql`](server/schema.sql). Use that file when implementing or extending features (the diagram above is for orientation).
+
+**Tables (summary):**
+
+| Area | Tables |
+|------|--------|
+| Core | `boards`, `lists`, `cards` |
+| Labels | `labels`, `card_labels` |
+| People | `members`, `card_members` |
+| Card detail | `checklists`, `checklist_items`, `comments`, `attachments`, `card_activities` |
+
+List and card **position** fields use `REAL` (float) for efficient reordering without renumbering.
 
 ## Assumptions
 

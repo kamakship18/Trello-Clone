@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const { uploadBoardBg } = require('../middleware/uploadCard');
+const { TEMPLATE_IDS, applyTemplate, getDefaultTitle } = require('../services/boardTemplates');
 
 // GET /api/boards — List all boards
 router.get('/', async (req, res) => {
@@ -45,6 +46,43 @@ router.post('/', async (req, res) => {
   } catch (err) {
     console.error('Error creating board:', err);
     res.status(500).json({ error: 'Failed to create board' });
+  }
+});
+
+// POST /api/boards/from-template — Create board with lists, cards, labels (must be before /:id routes)
+router.post('/from-template', async (req, res) => {
+  const { templateId, title, background } = req.body;
+  if (!templateId || !TEMPLATE_IDS.includes(templateId)) {
+    return res.status(400).json({ error: 'Valid templateId is required' });
+  }
+
+  const trimmed = title != null && String(title).trim() ? String(title).trim() : '';
+  const boardTitle = trimmed || `${getDefaultTitle(templateId)} board`;
+  const bg = background != null && String(background).trim() ? String(background).trim() : '#7b68ee';
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const boardRes = await client.query(
+      'INSERT INTO boards (title, background) VALUES ($1, $2) RETURNING *',
+      [boardTitle, bg]
+    );
+    const board = boardRes.rows[0];
+
+    const memRes = await client.query('SELECT id FROM members ORDER BY id');
+    const memberIds = memRes.rows.map((r) => r.id);
+
+    await applyTemplate(client, board.id, templateId, memberIds);
+
+    await client.query('COMMIT');
+    res.status(201).json(board);
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Error creating board from template:', err);
+    res.status(500).json({ error: 'Failed to create board from template' });
+  } finally {
+    client.release();
   }
 });
 
