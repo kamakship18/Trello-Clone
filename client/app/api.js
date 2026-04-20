@@ -18,7 +18,6 @@ const formApi = axios.create({
 export const fetchBoards = () => api.get('/boards');
 export const fetchBoard = (id) => api.get(`/boards/${id}`);
 export const createBoard = (data) => api.post('/boards', data);
-/** templateId: project-management | marketing | design-sprint */
 export const createBoardFromTemplate = (data) => api.post('/boards/from-template', data);
 export const updateBoard = (id, data) => api.put(`/boards/${id}`, data);
 export const deleteBoard = (id) => api.delete(`/boards/${id}`);

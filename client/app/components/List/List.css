@@ -164,6 +164,58 @@
   background: rgba(0, 0, 0, 0.08);
 }
 
+/* Colored columns keep light pastel washes in dark mode — use dark text/icons there (same as light theme) */
+html[data-theme='dark'] .list--colored .list-title,
+html[data-theme='dark'] .list--colored .list-title-input {
+  color: #172b4d;
+}
+
+html[data-theme='dark'] .list--colored .list-title:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme='dark'] .list--colored .list-title-input {
+  background: #ffffff;
+}
+
+html[data-theme='dark'] .list--colored .add-card-btn {
+  color: #5e6c84;
+}
+
+html[data-theme='dark'] .list--colored .add-card-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #172b4d;
+}
+
+html[data-theme='dark'] .list--colored .add-card-plus {
+  color: #5e6c84;
+}
+
+html[data-theme='dark'] .list--colored .list-move-trigger,
+html[data-theme='dark'] .list--colored .list-actions-trigger {
+  color: #5e6c84;
+}
+
+html[data-theme='dark'] .list--colored .list-move-trigger:hover,
+html[data-theme='dark'] .list--colored .list-actions-trigger:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #172b4d;
+}
+
+html[data-theme='dark'] .list--colored .list-actions-trigger.is-active {
+  background: rgba(0, 0, 0, 0.14);
+  color: #172b4d;
+}
+
+html[data-theme='dark'] .list--colored .add-form-cancel {
+  color: #5e6c84;
+}
+
+html[data-theme='dark'] .list--colored .add-form-cancel:hover {
+  color: #172b4d;
+  background: rgba(0, 0, 0, 0.08);
+}
+
 .add-card-plus {
   font-size: 18px;
   font-weight: 500;

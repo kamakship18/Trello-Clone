@@ -128,18 +128,97 @@
   opacity: 0.9;
 }
 
-.header-logo-icon {
+.header-logo-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* Neumorphic sun / moon sliding toggle */
+.header-theme-neo {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.header-theme-neo:focus-visible {
+  outline: 2px solid #0c66e4;
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.header-theme-neo-track {
+  position: relative;
+  display: block;
+  width: 64px;
+  height: 38px;
+  border-radius: 999px;
+  background: #e8eaef;
+  box-shadow:
+    inset 4px 4px 9px rgba(0, 0, 0, 0.08),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.9);
+}
+
+.header-theme-neo-ghost {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.32;
+  color: #6b778c;
+}
+
+.header-theme-neo-ghost svg {
+  display: block;
+}
+
+.header-theme-neo-ghost--sun {
+  left: 9px;
+}
+
+.header-theme-neo-ghost--moon {
+  right: 9px;
+}
+
+.header-theme-neo-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  background: linear-gradient(160deg, #ffffff 0%, #eef1f6 55%, #e8ecf2 100%);
+  box-shadow:
+    4px 5px 10px rgba(9, 30, 66, 0.16),
+    -3px -3px 8px rgba(255, 255, 255, 0.98),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  transition: transform 0.34s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.header-logo-icon svg {
-  width: 20px;
-  height: 20px;
-  fill: white;
+.header-theme-neo-thumb-icon {
+  display: block;
+}
+
+.header-theme-neo--dark .header-theme-neo-thumb {
+  transform: translateX(26px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-theme-neo-thumb {
+    transition: none;
+  }
 }
 
 .header-btn {
@@ -239,7 +318,7 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .header-create-btn {

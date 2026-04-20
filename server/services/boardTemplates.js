@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Preset board structures for Templates in the UI. Keys match client templateId values.
- */
-
 const TEMPLATE_IDS = ['project-management', 'marketing', 'design-sprint'];
 
 const TEMPLATES = {

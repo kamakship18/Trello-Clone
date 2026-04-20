@@ -1,8 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { searchCards } from '../../api';
 import { useBoard } from '../../context/BoardContext';
+import { useTheme } from '../../context/ThemeContext';
+import trelloLogo from '../../logo.png';
 import './Header.css';
 
 export default function Header({
@@ -15,6 +18,7 @@ export default function Header({
   onHomeSearchChange,
 }) {
   const { board } = useBoard();
+  const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -87,12 +91,14 @@ export default function Header({
           </button>
         )}
         <div className="header-logo" onClick={onGoHome} style={{ cursor: 'pointer' }}>
-          <div className="header-logo-icon header-logo-icon--blue">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <rect x="1" y="1" width="10" height="22" rx="2" ry="2" />
-              <rect x="13" y="1" width="10" height="14" rx="2" ry="2" />
-            </svg>
-          </div>
+          <Image
+            src={trelloLogo}
+            alt=""
+            width={24}
+            height={24}
+            className="header-logo-image"
+            priority
+          />
           Trello
         </div>
 
@@ -169,6 +175,75 @@ export default function Header({
       </div>
 
       <div className="header-right">
+        <button
+          type="button"
+          className={`header-theme-neo ${theme === 'dark' ? 'header-theme-neo--dark' : ''}`}
+          onClick={toggleTheme}
+          role="switch"
+          aria-checked={theme === 'dark'}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        >
+          <span className="header-theme-neo-track">
+            <span className="header-theme-neo-ghost header-theme-neo-ghost--sun" aria-hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
+                <path
+                  d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </svg>
+            </span>
+            <span className="header-theme-neo-ghost header-theme-neo-ghost--moon" aria-hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path
+                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </svg>
+            </span>
+            <span className="header-theme-neo-thumb" aria-hidden>
+              {theme === 'light' ? (
+                <svg
+                  className="header-theme-neo-thumb-icon header-theme-neo-thumb-icon--sun"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden
+                >
+                  <circle cx="12" cy="12" r="4" fill="#f59e0b" stroke="#ea8600" strokeWidth="1.25" />
+                  <path
+                    d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"
+                    stroke="#f59e0b"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="header-theme-neo-thumb-icon header-theme-neo-thumb-icon--moon"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden
+                >
+                  <path
+                    d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                    fill="#1e3a5f"
+                    stroke="#172554"
+                    strokeWidth="1"
+                  />
+                  <circle cx="17.5" cy="6.5" r="0.9" fill="#c7d2fe" />
+                  <circle cx="19.2" cy="9.2" r="0.65" fill="#a5b4fc" />
+                </svg>
+              )}
+            </span>
+          </span>
+        </button>
         <button
           type="button"
           className="header-create-btn header-create-btn--solid"
