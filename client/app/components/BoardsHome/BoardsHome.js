@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { fetchBoards, createBoard, createBoardFromTemplate, deleteBoard } from '../../api';
 import { getBoardThumbStyle } from '../../lib/boardThumbStyle';
 import PageLoader from '../PageLoader/PageLoader';
+import { useSimulatedLoadingProgress } from '../../hooks/useSimulatedLoadingProgress';
 import './BoardsHome.css';
 
 const BOARD_COLORS = [
@@ -64,6 +65,8 @@ export default function BoardsHome({
   const [sidebarNav, setSidebarNav] = useState('boards');
   const [workspaceOpen, setWorkspaceOpen] = useState(true);
   const [membersOpen, setMembersOpen] = useState(false);
+
+  const loadProgress = useSimulatedLoadingProgress(loading);
 
   const isCreateOpen = showCreate || showCreateModal;
   const handleCloseCreate = useCallback(() => {
@@ -146,7 +149,7 @@ export default function BoardsHome({
       <div className="bh-layout">
         <aside className="bh-sidebar bh-sidebar--skeleton" aria-hidden />
         <div className="bh-main bh-main--loading">
-          <PageLoader message="Loading your boards…" />
+          <PageLoader message="Loading your boards…" progress={loadProgress} />
         </div>
       </div>
     );
