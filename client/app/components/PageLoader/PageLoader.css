@@ -48,27 +48,6 @@
   }
 }
 
-.page-loader__rings {
-  position: relative;
-  width: 44px;
-  height: 44px;
-}
-
-.page-loader__ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 3px solid rgba(12, 102, 228, 0.2);
-  border-top-color: #0c66e4;
-  animation: page-loader-spin 0.85s linear infinite;
-}
-
-@keyframes page-loader-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .page-loader__message {
   margin: 0;
   font-size: 15px;
@@ -126,11 +105,6 @@
 .page-loader--compact .page-loader__bar--b {
   width: 10px;
   height: 18px;
-}
-
-.page-loader--compact .page-loader__rings {
-  width: 36px;
-  height: 36px;
 }
 
 .page-loader--compact .page-loader__message {

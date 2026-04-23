@@ -24,9 +24,7 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem('trello-theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const resolved =
-        stored === 'dark' || stored === 'light' ? stored : prefersDark ? 'dark' : 'light';
+      const resolved = stored === 'dark' || stored === 'light' ? stored : 'light';
       setThemeState(resolved);
       applyTheme(resolved);
     } catch {

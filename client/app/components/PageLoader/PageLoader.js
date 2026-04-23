@@ -23,9 +23,6 @@ export default function PageLoader({
         <span className="page-loader__bar page-loader__bar--a" />
         <span className="page-loader__bar page-loader__bar--b" />
       </div>
-      <div className="page-loader__rings" aria-hidden>
-        <span className="page-loader__ring" />
-      </div>
       <p className="page-loader__message">{message}</p>
       {pct != null && (
         <div className="page-loader__progress" aria-hidden>
